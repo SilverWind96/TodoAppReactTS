@@ -2,8 +2,8 @@ import React, { useState, SyntheticEvent } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 import Todo from "./Todo";
-type status = "inprogress" | "passed" | "failed";
-interface ITodo {
+export type status = "inprogress" | "passed" | "failed";
+export interface ITodo {
   id: string | number;
   title: string;
   content: string;
