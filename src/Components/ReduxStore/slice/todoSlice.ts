@@ -17,7 +17,6 @@ export const todoSlice = createSlice({
       const indexChangeStatus = state.findIndex(
         (todo) => todo.id === action.payload.id
       );
-      //   state=state.filter(todo=>todo.id)
       state[indexChangeStatus].status = action.payload.status;
       if (action.payload.status === "passed") {
         state[indexChangeStatus].finishedDate = new Date().toLocaleString();
@@ -28,7 +27,6 @@ export const todoSlice = createSlice({
   },
 });
 
-// Action creators are generated for each case reducer function
 export const { addTodo, removeTodo, changeStatusTodo } = todoSlice.actions;
 
 export default todoSlice.reducer;

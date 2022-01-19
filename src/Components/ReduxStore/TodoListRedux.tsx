@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { ITodo } from "../Basic/TodoApp";
+import { ITodo, status } from "../Basic/TodoApp";
 import { RootState } from "./store/store";
 import TodoItemRedux from "./TodoItemRedux";
 
@@ -9,18 +9,78 @@ function TodoListRedux() {
   const navigate = useNavigate();
   const { todo } = useSelector((state: RootState) => state);
 
+  const [filter, setFilter] = useState<status[]>([]);
+
+  const handleFilterButton = (status: status) => {
+    // setFilter({ ...filter, [status]: !filter[status] });
+    if (filter.includes(status)) {
+      setFilter(filter.filter((ft) => ft !== status));
+    } else {
+      // setFilter(filter.push())
+      const temp = [...filter];
+      temp.push(status);
+      setFilter(temp);
+    }
+  };
+
+  const handleClearFilter = () => {
+    // setFilter({ passed: false, inprogress: false, failed: false });
+    setFilter([]);
+  };
   return (
     <>
+      <button
+        onClick={() => navigate(`/`)}
+        className="homeButton m-1 cursor-pointer"
+      >
+        Back
+      </button>
+
+      <div>
+        <p>Filters</p>
+        <div>
+          <button
+            className={`homeButton ${
+              filter.includes("inprogress") ? "activeButton" : ""
+            }`}
+            onClick={() => handleFilterButton("inprogress")}
+          >
+            Inprogress
+          </button>
+          <button
+            className={`homeButton ${
+              filter.includes("passed") ? "activeButton" : ""
+            }`}
+            onClick={() => handleFilterButton("passed")}
+          >
+            Passed
+          </button>
+          <button
+            className={`homeButton ${
+              filter.includes("failed") ? "activeButton" : ""
+            }`}
+            onClick={() => handleFilterButton("failed")}
+          >
+            Failed
+          </button>
+          <button className="homeButton" onClick={handleClearFilter}>
+            Clear
+          </button>
+        </div>
+      </div>
+
       <ul id="myUL" className="flex flex-col items-center">
-        {todo.map((todoItem: ITodo) => (
-          <TodoItemRedux key={todoItem.id} todo={todoItem} />
-        ))}
-        <button
-          onClick={() => navigate(`/`)}
-          className="homeButton mt-2 cursor-pointer"
-        >
-          Cancel
-        </button>
+        {todo
+          .filter((todoItem) => {
+            if (filter.length === 0) {
+              return true;
+            } else {
+              return filter.includes(todoItem.status);
+            }
+          })
+          .map((todoItem: ITodo) => (
+            <TodoItemRedux key={todoItem.id} todo={todoItem} />
+          ))}
       </ul>
     </>
   );

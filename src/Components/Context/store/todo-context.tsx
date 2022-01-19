@@ -50,16 +50,15 @@ export const TodosContextProvider: React.FC = (props) => {
 
   const handleRemoveTodoBtn = (id: string | number) => {
     setTodos(todos.filter((todo) => todo.id !== id));
-    // const temp = [...todos];
-    // temp.splice(index, 1);
-    // setTodos(temp);
   };
+
   const contextValue: TodosContextObj = {
     todoList: todos,
     addTodo: handleAddBtn,
     removeTodo: handleRemoveTodoBtn,
     changeStatusTodo: statusChangeBtn,
   };
+
   return (
     <TodosContext.Provider value={contextValue}>
       {props.children}

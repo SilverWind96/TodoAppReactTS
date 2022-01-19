@@ -7,8 +7,8 @@ function App() {
   return (
     <>
       {/* <TodoApp /> */}
-      {/* <TodoContextApp /> */}
-      <TodoReduxApp />
+      <TodoContextApp />
+      {/* <TodoReduxApp /> */}
     </>
   );
 }
