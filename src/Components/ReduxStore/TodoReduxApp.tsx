@@ -8,13 +8,14 @@ import TodoListRedux from "./TodoListRedux";
 
 function TodoReduxApp() {
   return (
-    <Provider store={store}>
-      <Routes>
-        <Route path="redux" element={<HomeRedux />} />
-        <Route path="redux/addTodo" element={<AddTodoRedux />} />
-        <Route path="redux/viewTodoList" element={<TodoListRedux />} />
-      </Routes>
-    </Provider>
+    // <Provider store={store}>
+    //   <Routes>
+    //     <Route path="redux" element={<HomeRedux />} />
+    //     <Route path="redux/addTodo" element={<AddTodoRedux />} />
+    //     <Route path="redux/viewTodoList" element={<TodoListRedux />} />
+    //   </Routes>
+    // </Provider>
+    <></>
   );
 }
 

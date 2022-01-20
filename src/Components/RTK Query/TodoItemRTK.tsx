@@ -1,36 +1,65 @@
-import React, { useContext, useEffect, useState } from "react";
-import { TodosContext } from "./store/todo-context";
+import React, { useEffect, useState } from "react";
+import { useDeleteTodoMutation, useUpdateTodoMutation } from "./api/todoApi";
+import { IError, ITodoRTK } from "./type";
 
-export type status = "inprogress" | "passed" | "failed";
-
-export type ITodoContext = {
-  id: string | number;
-  title: string;
-  content: string;
-  createdDate: string;
-  modifiedDate: string;
-  finishedDate: string;
-  status: status;
-};
-
-type Props = {
-  todo: ITodoContext;
-};
-
-const TodoContext: React.FC<Props> = ({ todo }) => {
-  const todoCtx = useContext(TodosContext);
+const TodoItemRTK: React.FC<{ todo: ITodoRTK }> = ({ todo }) => {
   const [editState, setEditState] = useState(false);
   const [titleInput, setTitleInput] = useState("");
   const [contentInput, setContentInput] = useState("");
+
+  const [updateTodo, { isSuccess: isSuccessUpdate, error: errorUpdate }] =
+    useUpdateTodoMutation();
+
+  const [deleteTodo, { isSuccess: isDeleteSuccess, error: errorDelete }] =
+    useDeleteTodoMutation();
 
   useEffect(() => {
     setTitleInput(todo.title);
     setContentInput(todo.content);
   }, [todo]);
 
-  const handleSaveTodo = () => {
+  useEffect(() => {
+    if (isSuccessUpdate) {
+      alert("todo updated successfully");
+    } else if (errorUpdate !== undefined && "data" in errorUpdate) {
+      alert((errorUpdate?.data as IError).msg);
+    }
+  }, [errorUpdate, isSuccessUpdate]);
+
+  useEffect(() => {
+    if (isDeleteSuccess) {
+      alert("todo deleted successfully");
+    } else if (errorDelete !== undefined && "data" in errorDelete) {
+      alert((errorDelete?.data as IError).msg);
+    }
+  }, [errorDelete, isDeleteSuccess]);
+
+  const handlePassedButton = () =>
+    updateTodo({
+      ...todo,
+      status: "passed",
+      id: todo.id,
+      finishedDate: new Date().toLocaleString(),
+    });
+
+  const handleFailedButton = () =>
+    updateTodo({
+      ...todo,
+      status: "failed",
+      id: todo.id,
+      finishedDate: "",
+    });
+
+  const handleSaveTodo = (id: string | number) => {
     if (titleInput.length > 0 && contentInput.length > 0) {
-      todoCtx.modifyTodo(todo.id, titleInput, contentInput);
+      updateTodo({
+        ...todo,
+        title: titleInput,
+        content: contentInput,
+        id,
+        modifiedDate: new Date().toLocaleString(),
+        status: "inprogress",
+      });
       setEditState(false);
     } else {
       alert("Title and content must not be empty");
@@ -74,7 +103,6 @@ const TodoContext: React.FC<Props> = ({ todo }) => {
             <p className="content">{todo.content}</p>
           )}
         </div>
-
         <div className="flex justify-between">
           <p className="w-30 date">Created Date: {todo.createdDate}</p>
           <p className="w-30 date">
@@ -109,7 +137,7 @@ const TodoContext: React.FC<Props> = ({ todo }) => {
               <>
                 <button
                   className="todoActionTextButton"
-                  onClick={handleSaveTodo}
+                  onClick={() => handleSaveTodo(todo.id)}
                 >
                   Save
                 </button>
@@ -122,50 +150,40 @@ const TodoContext: React.FC<Props> = ({ todo }) => {
               </>
             )}
             {todo.status !== "passed" && !editState && (
-              <>
-                <button
-                  className="todoActionButton"
-                  onClick={() => todoCtx.changeStatusTodo("passed", todo.id)}
+              <button className="todoActionButton" onClick={handlePassedButton}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="svgButton"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="svgButton"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                </button>
-              </>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </button>
             )}
             {todo.status !== "failed" && (
-              <>
-                <button
-                  className="todoActionButton"
-                  onClick={() => todoCtx.changeStatusTodo("failed", todo.id)}
+              <button className="todoActionButton" onClick={handleFailedButton}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="svgButton"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="svgButton"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
-                    />
-                  </svg>
-                </button>
-              </>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
+                  />
+                </svg>
+              </button>
             )}
           </div>
         </div>
@@ -173,7 +191,7 @@ const TodoContext: React.FC<Props> = ({ todo }) => {
       <div className="flex justify-center align-center flex-grow">
         <button
           className="todoActionButton"
-          onClick={() => todoCtx.removeTodo(todo.id)}
+          onClick={() => deleteTodo(todo.id)}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -195,4 +213,4 @@ const TodoContext: React.FC<Props> = ({ todo }) => {
   );
 };
 
-export default TodoContext;
+export default TodoItemRTK;
