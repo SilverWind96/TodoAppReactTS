@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { addTodo } from "./slice/todoSlice";
+import { ITodoRedux } from "./TodoItemRedux";
 function AddTodoRedux() {
   // const todosCtx = useContext(TodosContext);
 
@@ -16,13 +17,14 @@ function AddTodoRedux() {
     e.preventDefault();
     if (titleInput.length > 0 && contentInput.length > 0) {
       const newId = uuidv4();
-      const newTodo = {
+      const newTodo: ITodoRedux = {
         status: "inprogress",
         id: newId,
         title: titleInput,
         content: contentInput,
         createdDate: new Date().toLocaleString(),
         finishedDate: "",
+        modifiedDate: "",
       };
       dispatch(addTodo(newTodo));
       alert("New to do added successfully");
@@ -58,7 +60,7 @@ function AddTodoRedux() {
         </button>
       </form>
       <button
-        onClick={() => navigate(`/`)}
+        onClick={() => navigate(-1)}
         className="homeButton mt-2 cursor-pointer"
       >
         Cancel

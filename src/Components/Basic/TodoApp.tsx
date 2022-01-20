@@ -19,22 +19,27 @@ function TodoApp() {
 
   const handleAddBtn = () => {
     if (titleInput.length > 0 && contentInput.length > 0) {
-      const newId = uuidv4();
-      setTodos([
-        ...todos,
-        {
-          status: "inprogress",
-          id: newId,
-          title: titleInput,
-          content: contentInput,
-          createdDate: new Date().toLocaleString(),
-          finishedDate: "",
-        },
-      ]);
-      setTitleInput("");
-      setContentInput("");
-    } else {
-      alert("You must write something in title and content!");
+      let newId = uuidv4();
+      setTodos((prev) => {
+        return [
+          ...prev,
+          {
+            status: "inprogress",
+            id: newId,
+            title: titleInput,
+            content: contentInput,
+            createdDate: new Date().toLocaleString(),
+            finishedDate: "",
+          },
+        ];
+      });
+
+      if (titleInput.length > 0 && contentInput.length > 0) {
+        setTitleInput("");
+        setContentInput("");
+      } else {
+        alert("You must write something in title and content!");
+      }
     }
   };
 
@@ -89,7 +94,7 @@ function TodoApp() {
       <ul id="myUL" className="flex flex-col items-center">
         {todos.map((todo: ITodo, index: number) => (
           <Todo
-            key={index}
+            key={todo.id}
             todo={todo}
             onClose={onClose}
             index={index}

@@ -1,26 +1,21 @@
 import React, { useContext, useState } from "react";
-import { ITodo, status } from "../Basic/TodoApp";
+import { status } from "../Basic/TodoApp";
 import { TodosContext } from "./store/todo-context";
-import TodoContext from "./TodoContext";
+import TodoContext, { ITodoContext } from "./TodoContext";
 
 function ListTodoContext() {
   const todosCtx = useContext(TodosContext);
   const [filter, setFilter] = useState<status[]>([]);
 
   const handleFilterButton = (status: status) => {
-    // setFilter({ ...filter, [status]: !filter[status] });
     if (filter.includes(status)) {
-      setFilter(filter.filter((ft) => ft !== status));
+      setFilter((prev) => prev.filter((ft) => ft !== status));
     } else {
-      // setFilter(filter.push())
-      const temp = [...filter];
-      temp.push(status);
-      setFilter(temp);
+      setFilter((prev) => [...prev, status]);
     }
   };
 
   const handleClearFilter = () => {
-    // setFilter({ passed: false, inprogress: false, failed: false });
     setFilter([]);
   };
   return (
@@ -66,8 +61,8 @@ function ListTodoContext() {
               return filter.includes(todoItem.status);
             }
           })
-          .map((todo: ITodo, index: number) => (
-            <TodoContext key={index} todo={todo} index={index} />
+          .map((todo: ITodoContext, index: number) => (
+            <TodoContext key={todo.id} todo={todo} />
           ))}
       </ul>
     </>

@@ -158,6 +158,9 @@ input {
 .w-45 {
   width: 45%;
 }
+.w-30 {
+  width: 30%;
+}
 
 .m-0 {
   margin: 0;
@@ -189,6 +192,9 @@ input {
 .h-screen {
   height: 100vh;
 }
+.w-full {
+  width: 100%;
+}
 .svgButton {
   height: 24px;
   width: 24px;
@@ -196,6 +202,15 @@ input {
 .todoActionButton {
   height: 36px;
   width: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.todoActionTextButton {
+  height: 36px;
+  /* width: 36px; */
+  /* padding: 0 20px; */
   display: flex;
   justify-content: center;
   align-items: center;

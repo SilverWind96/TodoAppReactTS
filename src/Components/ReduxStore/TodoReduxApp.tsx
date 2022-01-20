@@ -10,9 +10,9 @@ function TodoReduxApp() {
   return (
     <Provider store={store}>
       <Routes>
-        <Route path="/" element={<HomeRedux />} />
-        <Route path="addTodo" element={<AddTodoRedux />} />
-        <Route path="viewTodoList" element={<TodoListRedux />} />
+        <Route path="redux" element={<HomeRedux />} />
+        <Route path="redux/addTodo" element={<AddTodoRedux />} />
+        <Route path="redux/viewTodoList" element={<TodoListRedux />} />
       </Routes>
     </Provider>
   );

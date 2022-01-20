@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { ITodo, status } from "../Basic/TodoApp";
+import { status } from "../Basic/TodoApp";
 import { RootState } from "./store/store";
-import TodoItemRedux from "./TodoItemRedux";
+import TodoItemRedux, { ITodoRedux } from "./TodoItemRedux";
 
 function TodoListRedux() {
   const navigate = useNavigate();
@@ -12,25 +12,21 @@ function TodoListRedux() {
   const [filter, setFilter] = useState<status[]>([]);
 
   const handleFilterButton = (status: status) => {
-    // setFilter({ ...filter, [status]: !filter[status] });
     if (filter.includes(status)) {
-      setFilter(filter.filter((ft) => ft !== status));
+      setFilter((prev) => prev.filter((ft) => ft !== status));
     } else {
-      // setFilter(filter.push())
-      const temp = [...filter];
-      temp.push(status);
-      setFilter(temp);
+      setFilter((prev) => [...prev, status]);
     }
   };
 
   const handleClearFilter = () => {
-    // setFilter({ passed: false, inprogress: false, failed: false });
     setFilter([]);
   };
+
   return (
     <>
       <button
-        onClick={() => navigate(`/`)}
+        onClick={() => navigate(-1)}
         className="homeButton m-1 cursor-pointer"
       >
         Back
@@ -78,7 +74,7 @@ function TodoListRedux() {
               return filter.includes(todoItem.status);
             }
           })
-          .map((todoItem: ITodo) => (
+          .map((todoItem: ITodoRedux) => (
             <TodoItemRedux key={todoItem.id} todo={todoItem} />
           ))}
       </ul>
