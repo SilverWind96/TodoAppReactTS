@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { changeStatusTodo, removeTodo } from "./slice/todoSlice";
+import { changeStatusTodo, modifyTodo, removeTodo } from "./slice/todoSlice";
 
 type status = "inprogress" | "passed" | "failed";
 
@@ -29,13 +29,19 @@ const TodoItemRedux: React.FC<Props> = ({ todo }) => {
     setContentInput(todo.content);
   }, [todo]);
 
-  const handleSaveTodo = () => {
+  const handleSaveTodo = (id: string | number) => {
     if (titleInput.length > 0 && contentInput.length > 0) {
-      // todoCtx.modifyTodo(todo.id, titleInput, contentInput);
+      dispatch(modifyTodo({ title: titleInput, content: contentInput, id }));
       setEditState(false);
     } else {
       alert("Title and content must not be empty");
     }
+  };
+
+  const handleDiscardTodo = () => {
+    setEditState(false);
+    setTitleInput(todo.title);
+    setContentInput(todo.content);
   };
 
   return (
@@ -103,15 +109,13 @@ const TodoItemRedux: React.FC<Props> = ({ todo }) => {
               <>
                 <button
                   className="todoActionTextButton"
-                  onClick={handleSaveTodo}
+                  onClick={() => handleSaveTodo(todo.id)}
                 >
                   Save
                 </button>
                 <button
                   className="todoActionTextButton"
-                  onClick={() => {
-                    setEditState(false);
-                  }}
+                  onClick={handleDiscardTodo}
                 >
                   Discard
                 </button>

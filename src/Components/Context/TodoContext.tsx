@@ -37,6 +37,12 @@ const TodoContext: React.FC<Props> = ({ todo }) => {
     }
   };
 
+  const handleDiscardTodo = () => {
+    setEditState(false);
+    setTitleInput(todo.title);
+    setContentInput(todo.content);
+  };
+
   return (
     <li
       className={`flex ${todo.status === "passed" ? "passed" : ""} ${
@@ -109,9 +115,7 @@ const TodoContext: React.FC<Props> = ({ todo }) => {
                 </button>
                 <button
                   className="todoActionTextButton"
-                  onClick={() => {
-                    setEditState(false);
-                  }}
+                  onClick={handleDiscardTodo}
                 >
                   Discard
                 </button>

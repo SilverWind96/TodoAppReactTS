@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ITodo } from "../../Basic/TodoApp";
 import { ITodoRedux } from "../TodoItemRedux";
 
 const initialState: ITodoRedux[] = [];
@@ -35,12 +34,13 @@ export const todoSlice = createSlice({
       tempState[indexModify].title = action.payload.title;
       tempState[indexModify].content = action.payload.content;
       tempState[indexModify].status = "inprogress";
-      tempState[indexModify].finishedDate = new Date().toLocaleString();
-      return tempState;
+      tempState[indexModify].modifiedDate = new Date().toLocaleString();
+      state = tempState;
     },
   },
 });
 
-export const { addTodo, removeTodo, changeStatusTodo } = todoSlice.actions;
+export const { addTodo, removeTodo, changeStatusTodo, modifyTodo } =
+  todoSlice.actions;
 
 export default todoSlice.reducer;
